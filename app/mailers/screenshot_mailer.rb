@@ -1,3 +1,6 @@
 class ScreenshotMailer < ActionMailer::Base
-  default from: "from@example.com"
+  default from: "bcjordan@gmail.com"
+  def result_email(email)
+    mail(to: email, subject: 'Your deploy screenshot diffs')
+  end
 end
