@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  post 'snap' => 'snapshots#trigger'
+  get 'snapshots/trigger'
+
   resources :users, :only => [:index, :show]
   root to: 'visitors#index'
   get '/auth/:provider/callback' => 'sessions#create'
