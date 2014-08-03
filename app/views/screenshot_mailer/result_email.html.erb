@@ -5,10 +5,13 @@
 </head>
 <body>
 <center>
-  <h1>Your latest deploy screenshot</h1>
-  <p><a href="<%= @url %>"><%= @url %></a></p>
-  <a href="<%= @image %>"><img src="<%= @image %>" width="400"/></a>
-  <p><b><a href="http://whatthediff.herokuapp.com/">What the Diff</a></b></p>
+  <h1>Your latest deploy snapshots</h1>
+  <p><a href="<%= snapshot.url %>"><%= snapshot.url %></a></p>
+  <% @snapshots.each do |snapshot| %>
+    <h3><%= time_ago_in_words(snapshot.created_at) %> ago</h3>
+    <a href="<%= snapshot.image %>"><img src="<%= snapshot.image %>" width="400"/></a>
+  <% end %>
+  <p><font color="#999999"><b><a href="http://whatthediff.herokuapp.com/">What the Diff</a></b></font></p>
 </center>
 </body>
 </html>
