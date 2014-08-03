@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :page_lists
+
   post 'snap' => 'snapshots#trigger'
   post '/snapshots/receive/:id' => 'snapshots#receive'
   post '/diffs/receive/:id' => 'snapshots#receive_diff'

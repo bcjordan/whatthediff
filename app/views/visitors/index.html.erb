@@ -1,10 +1,28 @@
 <center>
-  <h1>Deploy fearlessly</h1>
-  <h2>by snapshotting your site each deploy</h2>
-  <h3>and seeing the <%= %w[diffs changes differences diff difference change].shuffle.first %></h3>
+  <h1>Zero Setup Deployment Verification</h1>
+  <h2>by <%= %w[diffing comparing].shuffle.first %> screenshots after each deploy</h2>
   <br/>
-  <h3>Using heroku? Just...</h3>
+  <h3>Using heroku? Just run this:</h3>
   <br/>
   <code>heroku addons:add deployhooks:http --url=http://whatthediff.herokuapp.com/snap</code>
-  <h3>...and we'll tell you what broke!</h3>
+  <h4 style="margin-top:20px">And you're done.</h4>
+  <h3>Or run manually:</h3>
+  <div align="center" width="400">
+    <%= simple_form_for(@page_list) do |f| %>
+      <%= f.error_notification %>
+
+      <div class="form-inputs">
+        <%= f.input :email, :required => true %>
+      </div>
+
+      <div class="form-inputs" style="margin-top:10px">
+        <p>URLs to watch (one per line)</p>
+        <%= f.text_area :urls, :required => true, :cols => "60", :rows => "25" %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.button :submit, "Snapshot!" %>
+      </div>
+    <% end %>
+  </div>
 </center>

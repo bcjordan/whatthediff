@@ -1,0 +1,23 @@
+<h1>Listing page_lists</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @page_lists.each do |page_list| %>
+      <tr>
+        <td><%= link_to 'Show', page_list %></td>
+        <td><%= link_to 'Edit', edit_page_list_path(page_list) %></td>
+        <td><%= link_to 'Destroy', page_list, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Page list', new_page_list_path %>
