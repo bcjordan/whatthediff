@@ -41,9 +41,10 @@ class SnapshotsController < ApplicationController
     snapshot.image_url = upload_public_file(snapshot_filename(snapshot), Base64.decode64(params[:imageData]))
     snapshot.save
     snapshots = Snapshot.where(url: snapshot.url).order("created_at").reverse_order.limit(2)
-    if snapshot.page_list_capture
+    if snapshot.page_list_capture && snapshots.count == 1
       if snapshot.page_list_capture.snapshots_all_ready?
         ScreenshotMailer.first_page_list_capture_email(snapshot.page_list_capture).deliver
+        return
       end
     end
     if snapshots.count == 1
