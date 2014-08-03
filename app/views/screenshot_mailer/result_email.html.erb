@@ -5,16 +5,45 @@
 </head>
 <body>
 <center>
-  <h1>Your latest deploy snapshots</h1>
-  <p>For page: <a href="<%= @snapshots.first.url %>"><%= @snapshots.first.url %></a></p>
-  <% if @diff %>
-    <h2>Most recent diff</h2>
-    <a href="<%= @diff.image_url %>"><img src="<%= @diff.image_url %>" width="400"/></a>
-  <% end %>
-  <h2>Most recent screenshots</h2>
-  <% @snapshots.each do |snapshot| %>
+  <% if @diff && @diff.different %>
+    <h2>Diff Detected</h2>
+    <p>Page: <a href="<%= @snapshots.first.url %>"><%= @snapshots.first.url %></a></p>
+    <table>
+      <tr>
+        <td>
+          <center>
+            <h1><%= time_ago_in_words(@diff.snapshot_b.created_at) %> ago</h1>
+            <a href="<%= @diff.snapshot_b.image_url %>"><img src="<%= @diff.snapshot_b.image_url %>" width="400"/></a>
+          </center>
+        </td>
+        <td>
+          <center>
+            <h1>Differences</h1>
+            <a href="<%= @diff.image_url %>"><img src="<%= @diff.image_url %>" width="400"/></a>
+          </center>
+        </td>
+        <td>
+          <center>
+            <h1><%= time_ago_in_words(@diff.snapshot_a.created_at) %> ago</h1>
+            <a href="<%= @diff.snapshot_a.image_url %>"><img src="<%= @diff.snapshot_a.image_url %>" width="400"/></a>
+          </center>
+        </td>
+      </tr>
+    </table>
+  <% elsif @diff && !@diff.different %>
+    <h2>Nice, no changes detected</h2>
+    <p>For page: <a href="<%= @snapshots.first.url %>"><%= @snapshots.first.url %></a></p>
+    <h2>Most recent screenshots</h2>
+    <% @snapshots.each do |snapshot| %>
+      <h3><%= time_ago_in_words(snapshot.created_at) %> ago</h3>
+      <a href="<%= snapshot.image_url %>"><img src="<%= snapshot.image_url %>" width="400"/></a>
+    <% end %>
+  <% else %>
+    <h2>Great, grabbed our first screenshot</h2>
+    <% snapshot = @snapshots.first %>
     <h3><%= time_ago_in_words(snapshot.created_at) %> ago</h3>
     <a href="<%= snapshot.image_url %>"><img src="<%= snapshot.image_url %>" width="400"/></a>
+    <h1>Now go break something!</h1>
   <% end %>
   <p><font color="#999999"><b><a href="http://whatthediff.herokuapp.com/">What the Diff</a></b></font></p>
 </center>

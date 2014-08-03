@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140803040526) do
+ActiveRecord::Schema.define(version: 20140803054819) do
 
   create_table "diffs", force: true do |t|
     t.datetime "created_at"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20140803040526) do
     t.integer  "snapshot_a_id"
     t.integer  "snapshot_b_id"
     t.string   "image_url"
+    t.boolean  "different"
   end
 
   create_table "snapshots", force: true do |t|

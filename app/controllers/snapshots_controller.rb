@@ -32,6 +32,7 @@ class SnapshotsController < ApplicationController
   def receive_diff
     diff = Diff.find(params[:id])
     diff.image_url = upload_public_file(diff_filename(diff), Base64.decode64(params[:imageData]))
+    diff.different = params[:diffFound] == 'true'
     diff.save
     ScreenshotMailer.result_email(diff.snapshot_a, diff).deliver
   end
