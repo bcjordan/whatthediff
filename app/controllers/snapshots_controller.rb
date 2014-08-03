@@ -23,7 +23,7 @@ class SnapshotsController < ApplicationController
     params = {
         :format   => 'png',
         :url      => snapshot.url,
-        :callback => "#{our_root_url}/receive_snapshot/#{snapshot.id}",
+        :callback => "#{our_root_url}/receive/#{snapshot.id}",
         :width    => 1024,
         :height   => 768
     }
