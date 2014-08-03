@@ -26,9 +26,14 @@ class SnapshotsController < ApplicationController
     # call the snapshot service
     url = params[:url]
     email = params[:user]
-
-    snapshot = Snapshot.create(email: email, url: url)
-    request_snapshot(snapshot)
+    @page_list = nil
+    pagelists = PageList.where(email: email)
+    if (pagelists.count > 0)
+      @page_list = pagelists.first
+    end
+    @page_list ||= PageList.create(email: email, urls: "#{url}")
+    @page_list_capture = PageListCapture.create(page_list_id: @page_list.id)
+    @page_list_capture.snapshots_for_urls.each{|snapshot| request_snapshot(snapshot)}
   end
 
   def receive
