@@ -29,6 +29,7 @@ class SnapshotsController < ApplicationController
     obj.acl = :public_read
     base_url = "http://s3.amazonaws.com/what-the-diff/"
     snapshot.image_url = "#{base_url}#{key}"
+    snapshot.save
   end
 
   def request_snapshot(snapshot)
