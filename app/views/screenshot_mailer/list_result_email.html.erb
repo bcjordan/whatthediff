@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+</head>
+<body>
+<center>
+  <% if @page_list_capture.has_diff? %>
+    <h1><%= "#{@page_list_capture.diff_count} page #{pluralize(@page_list_capture.diff_count, 'differences')} detected" %></h1>
+    <% @page_list_capture.diffs.where(different: true).each do |diff| %>
+      <table>
+        <tr>
+          <td>
+            <center>
+              <h2><%= time_ago_in_words(diff.snapshot_b.created_at) %> ago</h2>
+              <a href="<%= diff.snapshot_b.image_url %>"><img src="<%= diff.snapshot_b.image_url %>" width="300"/></a>
+            </center>
+          </td>
+          <td>
+            <center>
+              <h2>diff (black is unchanged)</h2>
+              <a href="<%= diff.image_url %>"><img src="<%= diff.image_url %>" width="300"/></a>
+            </center>
+          </td>
+          <td>
+            <center>
+              <h2>right now</h2>
+              <a href="<%= diff.snapshot_a.image_url %>"><img src="<%= diff.snapshot_a.image_url %>" width="300"/></a>
+            </center>
+          </td>
+        </tr>
+      </table>
+    <% end %>
+  <% else %>
+    <h1>Nice, no changes detected. Latest screenshots:</h1>
+    <% @page_list_capture.snapshots.each do |snapshot| %>
+      <p>Page <a href="<%= snapshot.url %>"><%= snapshot.url %></a>:</p>
+      <a href="<%= snapshot.image_url %>"><img src="<%= snapshot.image_url %>" width="400"/></a>
+      <hr style="background:none; border: dotted 1px #9C9C9C; border-width:1px 0 0 0; height:0; width: 34%; margin:0px 0px 0px 0px; padding-top:10px;padding-bottom:10px;">
+    <% end %>
+  <% end %>
+  <br/>
+  <br/>
+  <p><font color="#999999"><b><a href="http://whatthediff.herokuapp.com/">Diff Cop</a></b></font></p>
+</center>
+</body>
+</html>

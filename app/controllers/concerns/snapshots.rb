@@ -1,0 +1,3 @@
+module SnapshotConcern
+
+end

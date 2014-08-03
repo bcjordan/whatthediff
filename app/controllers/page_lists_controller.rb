@@ -28,7 +28,7 @@ class PageListsController < ApplicationController
 
     respond_to do |format|
       if @page_list.save
-        format.html { redirect_to @page_list, notice: 'Page list was successfully created.' }
+        format.html { redirect_to trigger_list_capture_url(@page_list.id), notice: 'Page list was successfully created, taking snapshot' }
         format.json { render :show, status: :created, location: @page_list }
       else
         format.html { render :new }

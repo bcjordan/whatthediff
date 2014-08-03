@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   post 'snap' => 'snapshots#trigger'
   post '/snapshots/receive/:id' => 'snapshots#receive'
   post '/diffs/receive/:id' => 'snapshots#receive_diff'
+  get 'snapshots/trigger/:list_id' => 'snapshots#trigger_list_capture', as: 'trigger_list_capture'
   get 'snapshots/trigger'
 
   resources :users, :only => [:index, :show]

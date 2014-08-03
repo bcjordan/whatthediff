@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140803171245) do
+ActiveRecord::Schema.define(version: 20140803175808) do
 
   create_table "diffs", force: true do |t|
     t.datetime "created_at"
@@ -20,6 +20,14 @@ ActiveRecord::Schema.define(version: 20140803171245) do
     t.integer  "snapshot_b_id"
     t.string   "image_url"
     t.boolean  "different"
+    t.integer  "page_list_id"
+    t.integer  "page_list_capture_id"
+  end
+
+  create_table "page_list_captures", force: true do |t|
+    t.integer  "page_list_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "page_lists", force: true do |t|
@@ -35,6 +43,8 @@ ActiveRecord::Schema.define(version: 20140803171245) do
     t.string   "url"
     t.string   "email"
     t.string   "image_url"
+    t.integer  "page_list_id"
+    t.integer  "page_list_capture_id"
   end
 
   create_table "users", force: true do |t|

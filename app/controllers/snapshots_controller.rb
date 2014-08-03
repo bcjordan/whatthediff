@@ -4,6 +4,13 @@ require 'base64'
 
 class SnapshotsController < ApplicationController
   skip_before_filter  :verify_authenticity_token
+
+  def trigger_list_capture
+    @page_list = PageList.find(params[:list_id])
+    @page_list_capture = PageListCapture.create(page_list_id: @page_list.id)
+    @page_list_capture.snapshots_for_urls.each{|snapshot| request_snapshot(snapshot)}
+  end
+
   def trigger
     # call the snapshot service
     url = params[:url]
@@ -26,6 +33,10 @@ class SnapshotsController < ApplicationController
     snapshotA = snapshot
     snapshotB = snapshots.second
     diff = Diff.create(snapshot_a_id: snapshotA.id, snapshot_b_id: snapshotB.id)
+    if snapshot.page_list_capture
+      diff.page_list_capture = snapshot.page_list_capture
+      diff.save
+    end
     request_diff(diff)
   end
 
@@ -34,7 +45,9 @@ class SnapshotsController < ApplicationController
     diff.image_url = upload_public_file(diff_filename(diff), Base64.decode64(params[:imageData]))
     diff.different = params[:diffFound] == true
     diff.save
-    ScreenshotMailer.result_email(diff.snapshot_a, diff).deliver
+    if diff.page_list_capture && diff.page_list_capture.diffs_all_ready?
+      ScreenshotMailer.list_result_email(diff.snapshot_a, diff).deliver
+    end
   end
 
   def snapshot_filename(snapshot)
