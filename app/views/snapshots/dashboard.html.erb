@@ -10,7 +10,7 @@
   </div>
   <% page_list_capture = @page_list.page_list_captures.last %>
     <% if page_list_capture.has_diff? %>
-    <h1>Latest diffs (<a href="<%= trigger_list_capture_path(@page_list.id) %>">trigger re-capture</a>):</h1>
+    <h1>Latest diffs:</h1>
     <% page_list_capture.diffs do |diff| %>
       <table>
         <tr>
