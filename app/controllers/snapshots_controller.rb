@@ -37,7 +37,7 @@ class SnapshotsController < ApplicationController
     snapshot.save
     snapshots = Snapshot.where(url: snapshot.url).order("created_at").reverse_order.limit(2)
     if snapshot.page_list_capture
-      if snapshot.snapshot.page_list_capture.snapshots_all_ready?
+      if snapshot.page_list_capture.snapshots_all_ready?
         ScreenshotMailer.first_page_list_capture_email(snapshot.snapshot.page_list_capture).deliver
       end
     end
