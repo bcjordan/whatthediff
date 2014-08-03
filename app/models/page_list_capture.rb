@@ -8,7 +8,7 @@ class PageListCapture < ActiveRecord::Base
     url_list = page_list.urls.split(/\r?\n/)
     url_list.each do |url|
       snapshot = Snapshot.create(email: page_list.email, url: url)
-      snapshot.page_list_capture = self
+      snapshot.page_list_capture_id = self.id
       snapshot.save
       list << snapshot
     end
