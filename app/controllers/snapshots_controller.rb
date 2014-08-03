@@ -67,7 +67,7 @@ class SnapshotsController < ApplicationController
     diff.different = params[:diffFound] == true
     diff.save
     if diff.page_list_capture && diff.page_list_capture.diffs_all_ready?
-      ScreenshotMailer.list_result_email(diff.snapshot_a, diff).deliver
+      ScreenshotMailer.list_result_email(diff.page_list_capture).deliver
     end
   end
 
