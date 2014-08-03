@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   post 'snap' => 'snapshots#trigger'
+  post '/snapshots/receive/:id' => 'snapshots#receive'
   get 'snapshots/trigger'
 
   resources :users, :only => [:index, :show]
