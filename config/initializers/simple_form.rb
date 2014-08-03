@@ -142,4 +142,6 @@ SimpleForm.setup do |config|
 
   # Default class for inputs
   # config.input_class = nil
+  config.label_text = lambda { |label, required| "#{label}" }
+
 end

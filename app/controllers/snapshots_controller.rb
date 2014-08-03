@@ -5,10 +5,21 @@ require 'base64'
 class SnapshotsController < ApplicationController
   skip_before_filter  :verify_authenticity_token
 
+  def trigger_list_capture_secret
+    @page_list = PageList.where(secret_key: params[:secret_key]).first
+    @page_list_capture = PageListCapture.create(page_list_id: @page_list.id)
+    @page_list_capture.snapshots_for_urls.each{|snapshot| request_snapshot(snapshot)}
+    redirect_to snapshots_dashboard_url(@page_list.secret_key), :notice => 'Triggered capture. Watch for email.'
+  end
+
   def trigger_list_capture
     @page_list = PageList.find(params[:list_id])
     @page_list_capture = PageListCapture.create(page_list_id: @page_list.id)
     @page_list_capture.snapshots_for_urls.each{|snapshot| request_snapshot(snapshot)}
+  end
+
+  def dashboard
+    @page_list = PageList.where(secret_key: params[:secret_key]).first
   end
 
   def trigger
@@ -25,6 +36,11 @@ class SnapshotsController < ApplicationController
     snapshot.image_url = upload_public_file(snapshot_filename(snapshot), Base64.decode64(params[:imageData]))
     snapshot.save
     snapshots = Snapshot.where(url: snapshot.url).order("created_at").reverse_order.limit(2)
+    if snapshot.page_list_capture
+      if snapshot.snapshot.page_list_capture.snapshots_all_ready?
+        ScreenshotMailer.first_page_list_capture_email(snapshot.snapshot.page_list_capture).deliver
+      end
+    end
     if snapshots.count == 1
       ScreenshotMailer.first_snapshot_email(snapshot).deliver
       return

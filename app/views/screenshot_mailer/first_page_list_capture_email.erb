@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+</head>
+<body>
+<center>
+  <h1>Great, we grabbed <%= "#{pluralize @page_list_capture.snapshots.count, "screenshot"} "%></h1>
+  <h2>Now go break something!</h2>
+  <p><%= @page_list_capture.snapshots.count > 1 ? "Those are some pretty pages down there." : "Now that's a pretty page down there." %> Anything look wrong? <a href="https://docs.google.com/forms/d/1U4eESOI1iWg9QlHpoox8ioBEjHXos6Z5YnpOYlV2iCE/viewform?usp=send_form">let us know</a>!</p>
+  <% @page_list_capture.snapshots.each do |snapshot| %>
+    <p>Page <a href="<%= snapshot.url %>"><%= snapshot.url %></a>:</p>
+    <a href="<%= snapshot.image_url %>"><img src="<%= snapshot.image_url %>" width="400"/></a>
+    <hr style="background:none; border: dotted 1px #9C9C9C; border-width:1px 0 0 0; height:0; width: 34%; margin:0px 0px 0px 0px; padding-top:10px;padding-bottom:10px;">
+  <% end %>
+  <br/>
+  <br/>
+  <p><font color="#999999"><b><a href="http://whatthediff.herokuapp.com/">Diff Cop</a></b></font></p>
+</center>
+</body>
+</html>

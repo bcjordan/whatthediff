@@ -21,4 +21,8 @@ class ScreenshotMailerPreview < ActionMailer::Preview
   def result_email_page_list_capture
     ScreenshotMailer.list_result_email(PageListCapture.last)
   end
+
+  def result_email_first_page_list_capture
+    ScreenshotMailer.first_page_list_capture_email(PageListCapture.last)
+  end
 end

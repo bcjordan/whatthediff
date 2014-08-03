@@ -19,6 +19,18 @@ class PageListCapture < ActiveRecord::Base
     snapshots.count == diffs.count && diffs.all? {|diff| diff.image_url.present? }
   end
 
+  def snapshots_all_ready?
+    snapshots.all? {|snapshot| snapshot.image_url.present? }
+  end
+
+  def has_ready_screenshots?
+    snapshots.any? {|snapshot| snapshot.image_url.present? }
+  end
+
+  def ready_screenshots
+    snapshots.select{|snapshot| snapshot.image_url.present?}
+  end
+
   def has_diff?
     diffs.any? {|diff| diff.different }
   end

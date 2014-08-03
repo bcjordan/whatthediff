@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140803175808) do
+ActiveRecord::Schema.define(version: 20140803185534) do
 
   create_table "diffs", force: true do |t|
     t.datetime "created_at"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 20140803175808) do
     t.datetime "updated_at"
     t.string   "email"
     t.string   "urls"
+    t.string   "secret_key"
   end
 
   create_table "snapshots", force: true do |t|

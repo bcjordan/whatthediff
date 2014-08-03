@@ -1,13 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
-</head>
-<body>
 <center>
-  <% if @page_list_capture.has_diff? %>
-    <h1><%= "#{@page_list_capture.diff_count} page #{'differences'.pluralize @page_list_capture.diff_count} detected" %></h1>
-    <% @page_list_capture.diffs.where(different: true).each do |diff| %>
+  <h3>Your secret dashboard URL:</h3>
+  <code><%= snapshots_dashboard_url(@page_list.secret_key) %></code>
+  <div width="200px" style="text-align: left; margin-left: 200px; margin-top: 20px">
+    <ul>
+      <li>
+        <a href="<%= trigger_capture_secret_path(@page_list.secret_key) %>">Trigger re-capture</a>
+      </li>
+    </ul>
+  </div>
+  <% page_list_capture = @page_list.page_list_captures.last %>
+    <% if page_list_capture.has_diff? %>
+    <h1>Latest diffs (<a href="<%= trigger_list_capture_path(@page_list.id) %>">trigger re-capture</a>):</h1>
+    <% page_list_capture.diffs do |diff| %>
       <table>
         <tr>
           <td>
@@ -31,17 +35,18 @@
         </tr>
       </table>
     <% end %>
-  <% else %>
-    <h1>Nice, no changes detected. Latest screenshots:</h1>
-    <% @page_list_capture.snapshots.each do |snapshot| %>
+  <% end %>
+
+  <% if page_list_capture.snapshots.count > 0 %>
+    <h1>Latest screenshots</h1>
+    <% waiting_shots = (page_list_capture.snapshots.count - page_list_capture.ready_screenshots.count) %>
+    <% if (waiting_shots > 0) %>
+      <h3>Waiting on <%= pluralize(waiting_shots, "snapshots") %> (<a href="<%= request.original_url %>">refresh</a>)</h3>
+    <% end %>
+    <% page_list_capture.ready_screenshots.each do |snapshot| %>
       <p>Page <a href="<%= snapshot.url %>"><%= snapshot.url %></a>:</p>
       <a href="<%= snapshot.image_url %>"><img src="<%= snapshot.image_url %>" width="400"/></a>
       <hr style="background:none; border: dotted 1px #9C9C9C; border-width:1px 0 0 0; height:0; width: 34%; margin:0px 0px 0px 0px; padding-top:10px;padding-bottom:10px;">
     <% end %>
   <% end %>
-  <br/>
-  <br/>
-  <p><font color="#999999"><b><a href="http://whatthediff.herokuapp.com/">Diff Cop</a></b></font></p>
 </center>
-</body>
-</html>

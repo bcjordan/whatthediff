@@ -14,7 +14,7 @@ class ScreenshotMailer < ActionMailer::Base
   def list_result_email(page_list_capture)
     @page_list_capture = page_list_capture
     subject = @page_list_capture.has_diff? ?
-        "#{@page_list_capture.diff_count} page #{pluralize(@page_list_capture.diff_count, 'differences')} detected" :
+        "#{@page_list_capture.diff_count} page #{'differences'.pluralize @page_list_capture.diff_count} detected" :
         'No differences detected'
     mail(to: @page_list_capture.page_list.email, subject: subject)
   end
@@ -22,5 +22,10 @@ class ScreenshotMailer < ActionMailer::Base
   def first_snapshot_email(snapshot)
     @snapshot = snapshot
     mail(to: snapshot.email, subject: 'Your first screenshot is ready!')
+  end
+
+  def first_page_list_capture_email(page_list_capture)
+    @page_list_capture = page_list_capture
+    mail(to: @page_list_capture.page_list.email, subject: 'Your first snapshot is ready!')
   end
 end

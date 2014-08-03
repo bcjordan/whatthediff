@@ -2,6 +2,7 @@
   <h1>Great choice!</h1>
   <h2>Capturing your first screenshots.</h2>
   <h3>Watch for your first report at <code><%= @page_list.email %></code> in the next few minutes</h3>
-  <h3>Come back here when you want to trigger again:</h3>
-  <code><%= root_url %></code>
+  <h4>Here's your super-secret dashboard URL (will also be in your email):</h4>
+  <code><%= snapshots_dashboard_url(@page_list.secret_key) %></code><br/>
+  <a style="margin-top: 20px" class="btn btn-primary btn-lg active" role="button" href="<%= snapshots_dashboard_url(@page_list.secret_key) %>">Check out dashboard now</a>
 </center>

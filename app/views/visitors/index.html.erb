@@ -1,28 +1,28 @@
 <center>
   <h1>Zero Setup Deployment Verification</h1>
   <h2>by <%= %w[diffing comparing].shuffle.first %> screenshots after each deploy</h2>
+  <h1>Here's how it works:</h1>
   <br/>
-  <h3>Using heroku? Just run this:</h3>
-  <br/>
-  <code>heroku addons:add deployhooks:http --url=http://whatthediff.herokuapp.com/snap</code>
-  <h4 style="margin-top:20px">And you're done.</h4>
-  <h3>Or run manually:</h3>
+  <h4>Just enter a few pages to watch (one per line):</h4>
   <div align="center" width="400">
     <%= simple_form_for(@page_list) do |f| %>
       <%= f.error_notification %>
+      <div class="form-inputs" style="margin-top:10px">
+        <%= f.text_area :urls, :required => true, :cols => "60", :rows => "3" %>
+      </div>
 
       <div class="form-inputs">
-        <%= f.input :email, :required => true %>
+        <h4>And your email for results:</h4>
+        <%= f.input :email, :required => true, label: false %>
       </div>
 
-      <div class="form-inputs" style="margin-top:10px">
-        <p>URLs to watch (one per line)</p>
-        <%= f.text_area :urls, :required => true, :cols => "60", :rows => "25" %>
-      </div>
-
-      <div class="form-actions">
+      <div class="form-actions" style="margin-top: 20px; margin-bottom: 20px">
         <%= f.button :submit, "Snapshot!" %>
       </div>
     <% end %>
   </div>
+
+  <h4 style="margin-bottom:15px">Or <b>using Heroku?</b> Just run this:</h4>
+  <code>heroku addons:add deployhooks:http --url=http://www.diffcop.com/snap</code>
+  <h4 style="margin-top:20px">And we'll just email you after each deploy.</h4>
 </center>
