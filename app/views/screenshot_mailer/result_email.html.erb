@@ -6,12 +6,12 @@
 <body>
 <center>
   <h1>Your latest deploy snapshots</h1>
-  <p><a href="<%= @snapshots.first.url %>"><%= @snapshots.first.url %></a></p>
+  <p>For page: <a href="<%= @snapshots.first.url %>"><%= @snapshots.first.url %></a></p>
   <% if @diff %>
-    <h1>Most recent diff</h1>
+    <h2>Most recent diff</h2>
     <a href="<%= @diff.image_url %>"><img src="<%= @diff.image_url %>" width="400"/></a>
   <% end %>
-  <h1>Most recent screenshots</h1>
+  <h2>Most recent screenshots</h2>
   <% @snapshots.each do |snapshot| %>
     <h3><%= time_ago_in_words(snapshot.created_at) %> ago</h3>
     <a href="<%= snapshot.image_url %>"><img src="<%= snapshot.image_url %>" width="400"/></a>
