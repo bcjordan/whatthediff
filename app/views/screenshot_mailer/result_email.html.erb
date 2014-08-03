@@ -6,7 +6,7 @@
 <body>
 <center>
   <h1>Your latest deploy snapshots</h1>
-  <p><a href="<%= snapshot.url %>"><%= snapshot.url %></a></p>
+  <p><a href="<%= @snapshots.first.url %>"><%= @snapshots.first.url %></a></p>
   <% @snapshots.each do |snapshot| %>
     <h3><%= time_ago_in_words(snapshot.created_at) %> ago</h3>
     <a href="<%= snapshot.image %>"><img src="<%= snapshot.image %>" width="400"/></a>
