@@ -1,5 +1,6 @@
 require "net/http"
 require "uri"
+require 'base64'
 
 class SnapshotsController < ApplicationController
   skip_before_filter  :verify_authenticity_token
@@ -14,7 +15,7 @@ class SnapshotsController < ApplicationController
 
   def receive
     snapshot = Snapshot.find(params[:id])
-    upload_snapshot(snapshot, params[:imageData])
+    upload_snapshot(snapshot, Base64.decode64(params[:imageData]))
     ScreenshotMailer.result_email(snapshot).deliver
   end
 
@@ -22,9 +23,12 @@ class SnapshotsController < ApplicationController
   def upload_snapshot(snapshot, data)
     s3 = AWS::S3.new
     bucket = s3.buckets['what-the-diff']
-    obj = bucket.objects["#{snapshot.url.gsub('/','-')}-#{snapshot.id}.png"]
+    key = "#{snapshot.url.gsub('/', '-')}-#{snapshot.id}.png"
+    obj = bucket.objects[key]
     obj.write(data)
-    snapshot.image_url = obj.url_for(:read)
+    obj.acl = :public_read
+    base_url = "http://s3.amazonaws.com/what-the-diff/"
+    snapshot.image_url = "#{base_url}#{key}"
   end
 
   def request_snapshot(snapshot)
