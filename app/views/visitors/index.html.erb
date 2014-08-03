@@ -8,10 +8,10 @@
 
   <h4>Just enter a few pages to watch (one per line):</h4>
   <div align="center" width="400">
-    <%= simple_form_for(@page_list) do |f| %>
+    <%= simple_form_for(@page_list) do |f|
       <%= f.error_notification %>
       <div class="form-inputs" style="margin-top:10px">
-        <%= f.text_area :urls, :required => true, :cols => "60", :rows => "3" %>
+        <%= f.text_area :urls, :required => true, :cols => "60", :rows => "3" %><br/>test
       </div>
 
       <div class="form-inputs">
@@ -28,5 +28,5 @@
   <h4 style="margin-bottom:15px">Or <b>using Heroku?</b> Just run this:</h4>
   <code>heroku addons:add deployhooks:http --url=http://www.diffcop.com/snap</code>
   <h4 style="margin-top:20px">And we'll just email you after each deploy.</h4>
-  This is a bug, buy Viagra!
+  te
 </center>
