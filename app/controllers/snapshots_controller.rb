@@ -19,7 +19,7 @@ class SnapshotsController < ApplicationController
     snapshot.save
     snapshots = Snapshot.where(url: snapshot.url).order("created_at").reverse_order.limit(2)
     if snapshots.count == 1
-      ScreenshotMailer.result_email(snapshot).deliver
+      ScreenshotMailer.first_snapshot_email(snapshot).deliver
       return
     end
 
@@ -32,7 +32,7 @@ class SnapshotsController < ApplicationController
   def receive_diff
     diff = Diff.find(params[:id])
     diff.image_url = upload_public_file(diff_filename(diff), Base64.decode64(params[:imageData]))
-    diff.different = params[:diffFound] == 'true'
+    diff.different = params[:diffFound] == true
     diff.save
     ScreenshotMailer.result_email(diff.snapshot_a, diff).deliver
   end
