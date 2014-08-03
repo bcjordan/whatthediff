@@ -4,6 +4,6 @@ class ScreenshotMailer < ActionMailer::Base
   default from: "bcjordan@gmail.com"
   def result_email(snapshot)
     @snapshots = Snapshot.where(url: snapshot.url).order("created_at").reverse_order.limit(3)
-    mail(to: email, subject: 'Your deploy screenshot diffs')
+    mail(to: snapshot.email, subject: 'Your deploy screenshot diffs')
   end
 end
