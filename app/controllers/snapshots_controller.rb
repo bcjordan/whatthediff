@@ -14,10 +14,19 @@ class SnapshotsController < ApplicationController
 
   def receive
     snapshot = Snapshot.find(params[:id])
+    upload_snapshot(snapshot, params[:imageData])
     ScreenshotMailer.result_email(snapshot).deliver
   end
 
   private
+  def upload_snapshot(snapshot, data)
+    s3 = AWS::S3.new
+    bucket = s3.buckets['what-the-diff']
+    obj = bucket.objects["#{snapshot.url.gsub('/','-')}-#{snapshot.id}.png"]
+    obj.write(data)
+    snapshot.image_url = obj.url_for(:read)
+  end
+
   def request_snapshot(snapshot)
     uri = URI.parse('http://grabshot.herokuapp.com/snap')
     params = {
