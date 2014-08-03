@@ -56,7 +56,7 @@ class SnapshotsController < ApplicationController
   end
 
   def request_snapshot(snapshot)
-    uri = URI.parse('http://grabshot.herokuapp.com/snap')
+    uri = URI.parse('http://grabbalicious.herokuapp.com/snap')
     params = {
         :format   => 'png',
         :url      => snapshot.url,
