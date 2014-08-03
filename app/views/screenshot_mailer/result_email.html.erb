@@ -4,11 +4,11 @@
   <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
 </head>
 <body>
-<h1>Your latest deploy screenshot</h1>
 <center>
+  <h1>Your latest deploy screenshot</h1>
+  <p><a href="<%= @url %>"><%= @url %></a></p>
   <a href="<%= @image %>"><img src="<%= @image %>" width="400"/></a>
+  <p><b><a href="<%= root_url %>">What the Diff</a></b></p>
 </center>
-<p>Run for URL <%= @url %></p>
-<p>Thanks for using us to answer the question—<b>what the diff?!</b></p>
 </body>
 </html>
