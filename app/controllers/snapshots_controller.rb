@@ -12,6 +12,13 @@ class SnapshotsController < ApplicationController
     redirect_to snapshots_dashboard_url(@page_list.secret_key), :notice => 'Triggered capture. Watch for email.'
   end
 
+  def trigger_list_capture_api_secret
+    @page_list = PageList.where(secret_key: params[:secret_key]).first
+    @page_list_capture = PageListCapture.create(page_list_id: @page_list.id)
+    @page_list_capture.snapshots_for_urls.each{|snapshot| request_snapshot(snapshot)}
+    head :ok
+  end
+
   def trigger_list_capture
     @page_list = PageList.find(params[:list_id])
     @page_list_capture = PageListCapture.create(page_list_id: @page_list.id)
