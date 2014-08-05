@@ -22,6 +22,7 @@ group :development, :test do
   gem 'quiet_assets'
   gem 'rails_layout'
   gem 'sqlite3'
+  gem 'thin'
 end
 group :production do
   gem 'unicorn'

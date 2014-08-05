@@ -2,10 +2,10 @@
   <h3>Your secret dashboard URL:</h3>
   <code><%= snapshots_dashboard_url(@page_list.secret_key) %></code>
   <h3>Want to trigger during your deploy?</h3>
-  <h4>Just <code>GET</code> the endpoint:</h4>
+  <h4>Just <code>POST</code> request the endpoint:</h4>
   <code><%= trigger_capture_api_url(@page_list.secret_key) %></code>
   <h4>Try it now:</h4>
-  <code>curl -i <%= trigger_capture_api_url(@page_list.secret_key) %></code>
+  <code>curl -iX POST <%= trigger_capture_api_url(@page_list.secret_key) %></code>
   <div width="200px" style="text-align: left; margin-left: 200px; margin-top: 20px">
     <ul>
       <li>
