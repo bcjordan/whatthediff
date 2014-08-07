@@ -9,4 +9,10 @@ class PageList < ActiveRecord::Base
     self.secret_key = Digest::MD5.hexdigest(some_random_chars)[0..5]
     self.save
   end
+
+  def historical_snapshots(snapshot)
+    page_list_captures.order('created_at').reverse_order
+      .map{|page_list_capture| page_list_capture.snapshots.find_by_url(snapshot.url)}
+      .reject{|snapshot| snapshot.nil?}
+  end
 end

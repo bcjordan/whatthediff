@@ -14,26 +14,27 @@
     </ul>
   </div>
   <% page_list_capture = @page_list.page_list_captures.last %>
-    <% if page_list_capture.has_diff? %>
-    <h1>Latest diffs:</h1>
-    <% page_list_capture.diffs do |diff| %>
-      <table>
+  <% if page_list_capture.has_diff? %>
+    <h1>Latest Diff(s)</h1>
+    <% page_list_capture.different_diffs.each do |diff| %>
+      <h2><%= diff.snapshot_a.url %></h2>
+      <table class="diffs">
         <tr>
           <td>
             <center>
-              <h2><%= time_ago_in_words(diff.snapshot_b.created_at) %> ago</h2>
+              <h4><%= time_ago_in_words(diff.snapshot_b.created_at) %> ago</h4>
               <a href="<%= diff.snapshot_b.image_url %>"><img src="<%= diff.snapshot_b.image_url %>" width="300"/></a>
             </center>
           </td>
           <td>
             <center>
-              <h2>diff (red is changed)</h2>
+              <h4>diff (red is changed)</h4>
               <a href="<%= diff.image_url %>"><img src="<%= diff.image_url %>" width="300"/></a>
             </center>
           </td>
           <td>
             <center>
-              <h2>right now</h2>
+              <h4>right now</h4>
               <a href="<%= diff.snapshot_a.image_url %>"><img src="<%= diff.snapshot_a.image_url %>" width="300"/></a>
             </center>
           </td>
@@ -43,13 +44,13 @@
   <% end %>
 
   <% if page_list_capture.snapshots.count > 0 %>
-    <h1>Latest screenshots</h1>
-    <% waiting_shots = (page_list_capture.snapshots.count - page_list_capture.ready_screenshots.count) %>
+    <h1>Latest Screenshot(s)</h1>
+    <% waiting_shots = (page_list_capture.snapshots.count - page_list_capture.ready_snapshots.count) %>
     <% if (waiting_shots > 0) %>
       <h3>Waiting on <%= pluralize(waiting_shots, "snapshots") %> (<a href="<%= request.original_url %>">refresh</a>)</h3>
     <% end %>
-    <% page_list_capture.ready_screenshots.each do |snapshot| %>
-      <p>Page <a href="<%= snapshot.url %>"><%= snapshot.url %></a>:</p>
+    <% page_list_capture.ready_snapshots.each do |snapshot| %>
+      <h4>Page <a href="<%= snapshot.url %>"><%= snapshot.url %></a>:</h4>
       <a href="<%= snapshot.image_url %>"><img src="<%= snapshot.image_url %>" width="400"/></a>
       <hr style="background:none; border: dotted 1px #9C9C9C; border-width:1px 0 0 0; height:0; width: 34%; margin:0px 0px 0px 0px; padding-top:10px;padding-bottom:10px;">
     <% end %>

@@ -34,4 +34,12 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Mailcatcher
+  # to use
+  # 1. gem install mailcatcher
+  # 2. mailcatcher
+  # 3. open 'http://localhost:1080/'
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
 end

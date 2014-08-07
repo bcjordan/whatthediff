@@ -3,31 +3,36 @@ class PageListCapture < ActiveRecord::Base
   has_many :snapshots
   has_many :diffs
 
-  def snapshots_for_urls
+  def make_snapshot_and_diff_objects
     list = []
     url_list = page_list.urls.split(/\r?\n/)
     url_list.each do |url|
-      snapshot = Snapshot.create(email: page_list.email, url: url)
-      snapshot.page_list_capture_id = self.id
-      snapshot.save
+      snapshot = Snapshot.create(email: page_list.email, url: url, page_list_capture: self)
+      same_page_snapshots = page_list.historical_snapshots(snapshot)
+      if same_page_snapshots.length > 1
+        Diff.create(snapshot_a_id: snapshot.id,
+                    snapshot_b_id: same_page_snapshots.second.id,
+                    page_list_capture: self)
+
+      end
       list << snapshot
     end
     list
   end
 
+  def is_first_capture?
+    page_list.page_list_captures.count == 1
+  end
+
   def diffs_all_ready?
-    snapshots.count == diffs.count && diffs.all? {|diff| diff.image_url.present? }
+    diffs.all? {|diff| diff.image_url.present? }
   end
 
   def snapshots_all_ready?
     snapshots.all? {|snapshot| snapshot.image_url.present? }
   end
 
-  def has_ready_screenshots?
-    snapshots.any? {|snapshot| snapshot.image_url.present? }
-  end
-
-  def ready_screenshots
+  def ready_snapshots
     snapshots.select{|snapshot| snapshot.image_url.present?}
   end
 
@@ -35,7 +40,11 @@ class PageListCapture < ActiveRecord::Base
     diffs.any? {|diff| diff.different }
   end
 
+  def different_diffs
+    diffs.select {|diff| diff.different }
+  end
+
   def diff_count
-    diffs.count {|diff| diff.different }
+    diffs.where(different: true).count
   end
 end

@@ -6,77 +6,86 @@ class SnapshotsController < ApplicationController
   skip_before_filter  :verify_authenticity_token
 
   def trigger_list_capture_secret
-    @page_list = PageList.where(secret_key: params[:secret_key]).first
-    @page_list_capture = PageListCapture.create(page_list_id: @page_list.id)
-    @page_list_capture.snapshots_for_urls.each{|snapshot| request_snapshot(snapshot)}
-    redirect_to snapshots_dashboard_url(@page_list.secret_key), :notice => 'Triggered capture. Watch for email.'
+    page_list = PageList.where(secret_key: params[:secret_key]).first
+    page_list_capture = PageListCapture.create(page_list_id: page_list.id)
+    page_list_capture.make_snapshot_and_diff_objects.each{|snapshot| request_snapshot(snapshot)}
+    redirect_to snapshots_dashboard_url(page_list.secret_key), :notice => "Triggered capture. Watch for your email results at #{page_list.email}."
   end
 
   def trigger_list_capture_api_secret
-    @page_list = PageList.where(secret_key: params[:secret_key]).first
-    @page_list_capture = PageListCapture.create(page_list_id: @page_list.id)
-    @page_list_capture.snapshots_for_urls.each{|snapshot| request_snapshot(snapshot)}
+    page_list = PageList.where(secret_key: params[:secret_key]).first
+    page_list_capture = PageListCapture.create(page_list_id: page_list.id)
+    page_list_capture.make_snapshot_and_diff_objects.each{|snapshot| request_snapshot(snapshot)}
     head :ok
   end
 
   def trigger_list_capture
     @page_list = PageList.find(params[:list_id])
-    @page_list_capture = PageListCapture.create(page_list_id: @page_list.id)
-    @page_list_capture.snapshots_for_urls.each{|snapshot| request_snapshot(snapshot)}
+    page_list_capture = PageListCapture.create(page_list: @page_list)
+    page_list_capture.make_snapshot_and_diff_objects.each{|snapshot| request_snapshot(snapshot)}
   end
 
   def dashboard
     @page_list = PageList.where(secret_key: params[:secret_key]).first
   end
 
-  def trigger
-    # call the snapshot service
+  def trigger_heroku
     url = params[:url]
     email = params[:user]
-    @page_list = nil
-    pagelists = PageList.where(email: email)
-    if (pagelists.count > 0)
-      @page_list = pagelists.first
-    end
-    @page_list ||= PageList.create(email: email, urls: "#{url}")
-    @page_list_capture = PageListCapture.create(page_list_id: @page_list.id)
-    @page_list_capture.snapshots_for_urls.each{|snapshot| request_snapshot(snapshot)}
+    page_list = PageList.find_by_email(email) || PageList.create(email: email, urls: "#{url}")
+    PageListCapture.create(page_list_id: page_list.id).make_snapshot_and_diff_objects.each{|snapshot| request_snapshot(snapshot)}
+    head :ok
   end
 
-  def receive
+  def receive_snapshot
     snapshot = Snapshot.find(params[:id])
     snapshot.image_url = upload_public_file(snapshot_filename(snapshot), Base64.decode64(params[:imageData]))
     snapshot.save
-    snapshots = Snapshot.where(url: snapshot.url).order("created_at").reverse_order.limit(2)
-    if snapshot.page_list_capture && snapshots.count == 1
-      if snapshot.page_list_capture.snapshots_all_ready?
-        ScreenshotMailer.first_page_list_capture_email(snapshot.page_list_capture).deliver
-        return
-      end
-    end
-    if snapshots.count == 1
-      ScreenshotMailer.first_snapshot_email(snapshot).deliver
-      return
+
+    current_capture = snapshot.page_list_capture
+    throw 'Snapshot is an orphan' unless current_capture
+
+    if current_capture.is_first_capture? && current_capture.snapshots_all_ready?
+      ScreenshotMailer.first_page_list_capture_email(current_capture).deliver
+      head(:ok) and return
     end
 
-    snapshotA = snapshot
-    snapshotB = snapshots.second
-    diff = Diff.create(snapshot_a_id: snapshotA.id, snapshot_b_id: snapshotB.id)
-    if snapshot.page_list_capture
-      diff.page_list_capture = snapshot.page_list_capture
-      diff.save
+    same_url_snapshots = current_capture.page_list.historical_snapshots(snapshot)
+
+    if same_url_snapshots.length == 1
+      head(:ok) and return
     end
+
+    throw 'Snapshots out of order' unless snapshot == same_url_snapshots.first
+
+    snapshotA = snapshot
+    snapshotB = same_url_snapshots.second
+
+    diff = Diff.where(snapshot_a_id: snapshotA.id, snapshot_b_id: snapshotB.id, page_list_capture: current_capture).first
+
+    throw 'Diff not found for multiple snapshots' unless diff
+
     request_diff(diff)
+    head(:ok)
   end
 
   def receive_diff
-    diff = Diff.find(params[:id])
-    diff.image_url = upload_public_file(diff_filename(diff), Base64.decode64(params[:imageData]))
-    diff.different = params[:diffFound] == true
+    diff_id = params[:id]
+    difference_found = params[:diffFound]
+    image_data = params[:imageData]
+
+    diff = Diff.find(diff_id)
+    throw 'Diff is an orphan' unless diff.page_list_capture
+
+    diff.image_url = upload_public_file(diff_filename(diff), Base64.decode64(image_data))
+    diff.different = difference_found
     diff.save
-    if diff.page_list_capture && diff.page_list_capture.diffs_all_ready?
-      ScreenshotMailer.list_result_email(diff.page_list_capture).deliver
+
+    if diff.page_list_capture.diffs_all_ready?
+      ScreenshotMailer.list_result_email(diff.page_list_capture).deliver and head(:ok) and return
     end
+
+    head(:ok)
   end
 
   def snapshot_filename(snapshot)

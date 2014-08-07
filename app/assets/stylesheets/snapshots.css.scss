@@ -1,3 +1,7 @@
-// Place all the styles related to the snapshots controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+.diffs td {
+  vertical-align: top;
+  padding: 3px;
+  img {
+    border:3px solid rgba(0, 0, 0, 0.3);
+  }
+}

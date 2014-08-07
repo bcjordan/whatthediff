@@ -7,6 +7,8 @@
 <center>
   <h1>Great, we grabbed <%= "#{pluralize @page_list_capture.snapshots.count, "screenshot"} "%></h1>
   <h2>Now go break something!</h2>
+  <h3>Your secret dashboard URL:</h3>
+  <code><%= snapshots_dashboard_url(@page_list_capture.page_list.secret_key) %></code>
   <p><%= @page_list_capture.snapshots.count > 1 ? "Those are some pretty pages down there." : "Now that's a pretty page down there." %> Anything look wrong? <a href="https://docs.google.com/forms/d/1U4eESOI1iWg9QlHpoox8ioBEjHXos6Z5YnpOYlV2iCE/viewform?usp=send_form">let us know</a>!</p>
   <% @page_list_capture.snapshots.each do |snapshot| %>
     <p>Page <a href="<%= snapshot.url %>"><%= snapshot.url %></a>:</p>
