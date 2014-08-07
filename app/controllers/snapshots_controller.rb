@@ -21,6 +21,9 @@ class SnapshotsController < ApplicationController
 
   def trigger_list_capture
     @page_list = PageList.find(params[:list_id])
+    unless @page_list.page_list_captures.count == 0
+      redirect_to root_url, :notice => 'Already captured your first snapshots. Check your email for results.'
+    end
     page_list_capture = PageListCapture.create(page_list: @page_list)
     page_list_capture.make_snapshot_and_diff_objects.each{|snapshot| request_snapshot(snapshot)}
   end
