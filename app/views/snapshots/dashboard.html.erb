@@ -47,7 +47,7 @@
     <h1>Latest Screenshot(s)</h1>
     <% waiting_shots = (page_list_capture.snapshots.count - page_list_capture.ready_snapshots.count) %>
     <% if (waiting_shots > 0) %>
-      <h3>Waiting on <%= pluralize(waiting_shots, "snapshots") %> (<a href="<%= request.original_url %>">refresh</a>)</h3>
+      <h3>Waiting on <%= pluralize(waiting_shots, "snapshot") %> (<a href="<%= request.original_url %>">refresh</a>)</h3>
     <% end %>
     <% page_list_capture.ready_snapshots.each do |snapshot| %>
       <h4>Page <a href="<%= snapshot.url %>"><%= snapshot.url %></a>:</h4>
