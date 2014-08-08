@@ -92,22 +92,22 @@ class SnapshotsController < ApplicationController
   end
 
   def snapshot_filename(snapshot)
-    "#{snapshot.url.gsub('/', '-')}-#{snapshot.id}.png"
+    Rack::Utils.escape("#{snapshot.url}snap#{snapshot.id}")
   end
 
   def diff_filename(diff)
-    "#{diff.snapshot_a.url.gsub('/', '-')}-#{diff.snapshot_b.id}-diff.png"
+    Rack::Utils.escape("#{diff.snapshot_a.url}diff#{diff.id}")
   end
 
   private
   def upload_public_file(filename, data)
     s3 = AWS::S3.new
     bucket = s3.buckets['what-the-diff']
-    obj = bucket.objects[filename]
+    obj = bucket.objects["#{filename}.png"]
     obj.write(data)
     obj.acl = :public_read
     base_url = "http://s3.amazonaws.com/what-the-diff/"
-    "#{base_url}#{filename}"
+    "#{base_url}#{Rack::Utils.escape(filename)}.png"
   end
 
   def request_snapshot(snapshot)
