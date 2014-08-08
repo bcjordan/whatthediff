@@ -6,7 +6,7 @@
 <body>
 <center>
   <% if @page_list_capture.has_diff? %>
-    <h1><%= "#{@page_list_capture.diff_count} page #{'differences'.pluralize @page_list_capture.diff_count} detected" %></h1>
+    <h1><%= "#{@page_list_capture.diff_count} page #{'difference'.pluralize @page_list_capture.diff_count} detected" %></h1>
     <% @page_list_capture.diffs.where(different: true).each do |diff| %>
       <table>
         <tr>
