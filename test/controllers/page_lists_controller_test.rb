@@ -21,7 +21,7 @@ class PageListsControllerTest < ActionController::TestCase
       post :create, page_list: {  }
     end
 
-    assert_redirected_to page_list_path(assigns(:page_list))
+    assert_redirected_to trigger_list_capture_url(assigns(:page_list))
   end
 
   test "should show page_list" do

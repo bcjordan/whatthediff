@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140803185534) do
+ActiveRecord::Schema.define(version: 20140909052341) do
 
   create_table "diffs", force: true do |t|
     t.datetime "created_at"
@@ -36,6 +36,19 @@ ActiveRecord::Schema.define(version: 20140803185534) do
     t.string   "email"
     t.string   "urls"
     t.string   "secret_key"
+  end
+
+  create_table "page_lists_pages", force: true do |t|
+    t.integer  "page_id"
+    t.integer  "page_list_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "pages", force: true do |t|
+    t.string   "url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "snapshots", force: true do |t|
