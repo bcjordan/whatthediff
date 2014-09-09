@@ -26,6 +26,7 @@ class PageListsControllerTest < ActionController::TestCase
 
     page_list = assigns(:page_list)
     assert_not_empty(page_list.pages)
+    assert_equal('testing@brian.com', page_list.email)
     assert_redirected_to trigger_list_capture_url(page_list)
   end
 

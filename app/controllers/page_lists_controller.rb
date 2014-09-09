@@ -70,6 +70,7 @@ class PageListsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def page_list_params
-      params.permit(:url_list).permit(:page_list, [:email])
+      params.permit(:url_list)
+      params[:page_list].permit!
     end
 end
