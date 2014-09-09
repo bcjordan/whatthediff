@@ -5,8 +5,8 @@ class PageListCapture < ActiveRecord::Base
 
   def make_snapshot_and_diff_objects
     list = []
-    url_list = page_list.urls.split(/\r?\n/)
-    url_list.each do |url|
+    page_list.pages.each do |page|
+      url = page.url
       snapshot = Snapshot.create(email: page_list.email, url: url, page_list_capture: self)
       same_page_snapshots = page_list.historical_snapshots(snapshot)
       if same_page_snapshots.length > 1

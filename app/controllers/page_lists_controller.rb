@@ -25,6 +25,7 @@ class PageListsController < ApplicationController
   # POST /page_lists.json
   def create
     @page_list = PageList.new(page_list_params)
+    @page_list.set_urls(params[:url_list])
 
     respond_to do |format|
       if @page_list.save
@@ -69,6 +70,6 @@ class PageListsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def page_list_params
-      params[:page_list].permit!
+      params.permit(:url_list).permit(:page_list, [:email])
     end
 end

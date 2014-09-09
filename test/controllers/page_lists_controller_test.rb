@@ -18,10 +18,15 @@ class PageListsControllerTest < ActionController::TestCase
 
   test "should create page_list" do
     assert_difference('PageList.count') do
-      post :create, page_list: {  }
+      post :create,
+           page_list: {email: 'testing@brian.com'},
+           url_list: 'http://google.com
+                      http://whadap.com'
     end
 
-    assert_redirected_to trigger_list_capture_url(assigns(:page_list))
+    page_list = assigns(:page_list)
+    assert_not_empty(page_list.pages)
+    assert_redirected_to trigger_list_capture_url(page_list)
   end
 
   test "should show page_list" do

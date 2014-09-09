@@ -11,7 +11,7 @@
     <%= simple_form_for(@page_list) do |f| %>
       <%= f.error_notification %>
       <div class="form-inputs" style="margin-top:10px">
-        <%= f.text_area :urls, :required => true, :cols => "60", :rows => "3" %>
+        <%= text_area_tag :url_list, '', :required => true, :cols => "60", :rows => "3" %>
       </div>
 
       <div class="form-inputs">
