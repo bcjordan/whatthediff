@@ -15,7 +15,9 @@ gem 'omniauth'
 gem 'omniauth-github'
 gem 'aws-sdk'
 gem 'simple_form'
+
 group :development, :test do
+  gem 'factory_girl_rails'
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_20]
   gem 'hub', :require=>nil
